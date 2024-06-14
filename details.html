@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Details - The Economist PDB</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="section">
+    <img src="econ_logo.png" alt="The Economist Logo">
+  </div>
+  <div id="preview-card-container"></div>
+  <div class="section" data-index="0">
+    <div id="section-content-1" class="section-content"></div>
+  </div>
+  <div class="section" data-index="1">
+    <div id="section-content-2" class="section-content"></div>
+  </div>
+  <div class="section" data-index="2">
+    <div id="section-content-3" class="section-content"></div>
+  </div>
+  <div class="section" data-index="3">
+    <div id="section-content-4" class="section-content"></div>
+  </div>
+  <div class="section" data-index="4">
+    <div id="section-content-5" class="section-content"></div>
+  </div>
+
+  <div class="buttons-container">
+    <a href="mailto:sondresolstad@economist.com?subject=Feedback%20on%20The%20Economist%20PDB" class="button">
+      <span>📧</span>
+      Feedback?
+    </a>
+    <a href="info.html" class="button">
+      Info
+    </a>
+    <a href="endless_scroll.html" class="button">
+      All news?
+    </a>
+  </div>
+
+  <script>
+  function getQueryParams() {
+  const params = {};
+  window.location.search.substr(1).split("&").forEach(function (item) {
+    const [key, value] = item.split("=");
+    params[key] = decodeURIComponent(value);
+  });
+  return params;
+}
+
+const params = getQueryParams();
+const index = params.index;
+let jsonData = [];
+
+const sections = document.querySelectorAll('.section');
+
+function addClickEvent(section, url) {
+  section.addEventListener('click', () => {
+    window.location.href = url;
+  });
+}
+
+// Fetch JSON file and update content
+fetch('output.json')
+  .then(response => response.json())
+  .then(data => {
+    jsonData = data;
+    if (data.length > 0 && index >= 0 && index < data.length) {
+      const sectionContent1 = document.getElementById('section-content-1');
+      const sectionContent2 = document.getElementById('section-content-2');
+      const sectionContent3 = document.getElementById('section-content-3');
+      const sectionContent4 = document.getElementById('section-content-4');
+      const sectionContent5 = document.getElementById('section-content-5');
+
+      if (data[index].details[0]) {
+        sectionContent1.innerHTML = data[index].details[0].text;
+        addClickEvent(sectionContent1.parentElement, data[index].details[0].url);
+      }
+      if (data[index].details[1]) {
+        sectionContent2.innerHTML = data[index].details[1].text;
+        addClickEvent(sectionContent2.parentElement, data[index].details[1].url);
+      }
+      if (data[index].details[2]) {
+        sectionContent3.innerHTML = data[index].details[2].text;
+        addClickEvent(sectionContent3.parentElement, data[index].details[2].url);
+      }
+      if (data[index].details[3]) {
+        sectionContent4.innerHTML = data[index].details[3].text;
+        addClickEvent(sectionContent4.parentElement, data[index].details[3].url);
+      }
+      if (data[index].details[4]) {
+        sectionContent5.innerHTML = data[index].details[4].text;
+        addClickEvent(sectionContent5.parentElement, data[index].details[4].url);
+      }
+    }
+  })
+  .catch(error => console.error('Error fetching the JSON file:', error));
+
+  </script>
+</body>
+</html>

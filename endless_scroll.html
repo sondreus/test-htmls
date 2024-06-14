@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Economist PDB</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="section">
+    <img src="econ_logo.png" alt="The Economist Logo">
+  </div>
+  <div id="sections-container"></div>
+  <div class="buttons-container">
+    <a href="mailto:sondresolstad@economist.com?subject=Feedback%20on%20The%20Economist%20PDB" class="button">
+      <span>📧</span>
+      Feedback?
+    </a>
+    <a href="info.html" class="button">
+      Info
+    </a>
+    <a href="index.html" class="button">
+      Only top 5?
+    </a>
+  </div>
+
+  <script>
+    let jsonData = [];
+
+    // Function to create a section element
+    function createSection(index, title) {
+      const section = document.createElement('div');
+      section.className = 'section';
+      section.dataset.index = index;
+
+      const sectionContent = document.createElement('div');
+      sectionContent.className = 'section-content';
+      sectionContent.textContent = title;
+
+      section.appendChild(sectionContent);
+
+      section.addEventListener('click', () => {
+        window.location.href = `details.html?index=${index}`;
+      });
+
+      return section;
+    }
+
+    // Fetch JSON file and update content
+    fetch('output.json')
+      .then(response => response.json())
+      .then(data => {
+        jsonData = data;
+        const sectionsContainer = document.getElementById('sections-container');
+        sectionsContainer.innerHTML = ''; // Clear existing content
+
+        data.forEach((item, index) => {
+          const section = createSection(index, item.title);
+          sectionsContainer.appendChild(section);
+        });
+      })
+      .catch(error => console.error('Error fetching the JSON file:', error));
+  </script>
+</body>
+</html>
